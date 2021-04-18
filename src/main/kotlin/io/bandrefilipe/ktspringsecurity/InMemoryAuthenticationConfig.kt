@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
@@ -27,6 +28,15 @@ class InMemoryAuthenticationConfig : WebSecurityConfigurerAdapter() {
             .withUser("user")
             .password("user")
             .roles(USER)
+    }
+
+    override fun configure(http: HttpSecurity) {
+        log.debug { "Configuring authorization" }
+        http.authorizeRequests()
+            .antMatchers("/", "static/**").permitAll()
+            .antMatchers("/user").hasAnyRole(ADMIN, USER)
+            .antMatchers("/admin").hasRole(ADMIN)
+            .and().formLogin()
     }
 
     @Bean
