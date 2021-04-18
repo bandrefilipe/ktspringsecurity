@@ -23,19 +23,19 @@ class InMemoryAuthenticationConfig : WebSecurityConfigurerAdapter() {
         auth.inMemoryAuthentication()
             .withUser("admin")
             .password("admin")
-            .roles(ADMIN, USER)
+            .roles(ROLE_ADMIN, ROLE_USER)
             .and()
             .withUser("user")
             .password("user")
-            .roles(USER)
+            .roles(ROLE_USER)
     }
 
     override fun configure(http: HttpSecurity) {
         log.debug { "Configuring authorization" }
         http.authorizeRequests()
             .antMatchers("/", "static/**").permitAll()
-            .antMatchers("/user").hasAnyRole(ADMIN, USER)
-            .antMatchers("/admin").hasRole(ADMIN)
+            .antMatchers("/user").hasAnyRole(ROLE_ADMIN, ROLE_USER)
+            .antMatchers("/admin").hasRole(ROLE_ADMIN)
             .and().formLogin()
     }
 

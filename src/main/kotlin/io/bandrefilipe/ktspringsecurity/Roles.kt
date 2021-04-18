@@ -1,4 +1,4 @@
 package io.bandrefilipe.ktspringsecurity
 
-const val ADMIN = "ADMIN"
-const val USER = "USER"
+const val ROLE_ADMIN = "ADMIN"
+const val ROLE_USER = "USER"
