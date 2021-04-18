@@ -1,6 +1,10 @@
-package io.bandrefilipe.ktspringsecurity
+package io.bandrefilipe.ktspringsecurity.configuration
 
+import io.bandrefilipe.ktspringsecurity.adapters.configureAuthorization
+import io.bandrefilipe.ktspringsecurity.adapters.configureDefaultUsers
+import io.bandrefilipe.ktspringsecurity.constants.IN_MEMORY_JDBC_AUTHENTICATION
 import mu.KotlinLogging
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -9,34 +13,30 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import javax.sql.DataSource
 
 @EnableWebSecurity
-@Profile(IN_MEMORY_AUTHENTICATION)
-class InMemoryAuthenticationConfig : WebSecurityConfigurerAdapter() {
+@Profile(IN_MEMORY_JDBC_AUTHENTICATION)
+class InMemoryJDBCAuthenticationConfig(
+    @Autowired private val dataSource: DataSource
+) : WebSecurityConfigurerAdapter() {
 
     init {
-        log.debug { "Creating bean ${InMemoryAuthenticationConfig::class.simpleName}" }
+        log.debug { "Creating bean ${InMemoryJDBCAuthenticationConfig::class.simpleName}" }
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
-        log.debug { "Configuring in-memory authentication" }
-        auth.inMemoryAuthentication()
-            .withUser("admin")
-            .password("admin")
-            .roles(ROLE_ADMIN, ROLE_USER)
-            .and()
-            .withUser("user")
-            .password("user")
-            .roles(ROLE_USER)
+        log.debug { "Configuring JDBC-based authentication" }
+        configureDefaultUsers(
+            auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .withDefaultSchema()
+        )
     }
 
     override fun configure(http: HttpSecurity) {
-        log.debug { "Configuring authorization" }
-        http.authorizeRequests()
-            .antMatchers("/", "static/**").permitAll()
-            .antMatchers("/user").hasAnyRole(ROLE_ADMIN, ROLE_USER)
-            .antMatchers("/admin").hasRole(ROLE_ADMIN)
-            .and().formLogin()
+        log.debug { "Delegating authorization configuration…" }
+        configureAuthorization(http)
     }
 
     @Bean

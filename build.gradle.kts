@@ -26,6 +26,9 @@ dependencies {
 
     implementation("io.github.microutils:kotlin-logging:2.0.6")
 
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    runtimeOnly("com.h2database:h2")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
