@@ -22,11 +22,11 @@ class InMemoryAuthenticationConfig : WebSecurityConfigurerAdapter() {
         auth.inMemoryAuthentication()
             .withUser("admin")
             .password("admin")
-            .roles("ADMIN", "USER")
+            .roles(ADMIN, USER)
             .and()
             .withUser("user")
             .password("user")
-            .roles("USER")
+            .roles(USER)
     }
 
     @Bean
