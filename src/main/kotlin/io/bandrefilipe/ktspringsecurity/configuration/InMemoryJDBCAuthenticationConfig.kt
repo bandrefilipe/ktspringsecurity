@@ -1,7 +1,6 @@
 package io.bandrefilipe.ktspringsecurity.configuration
 
 import io.bandrefilipe.ktspringsecurity.adapters.configureAuthorization
-import io.bandrefilipe.ktspringsecurity.adapters.configureDefaultUsers
 import io.bandrefilipe.ktspringsecurity.constants.IN_MEMORY_JDBC_AUTHENTICATION
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,11 +26,12 @@ class InMemoryJDBCAuthenticationConfig(
 
     override fun configure(auth: AuthenticationManagerBuilder) {
         log.debug { "Configuring JDBC-based authentication" }
-        configureDefaultUsers(
-            auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .withDefaultSchema()
-        )
+        log.debug { "usersByUsernameQuery: $usersByUsernameQuery" }
+        log.debug { "authoritiesByUsernameQuery: $authoritiesByUsernameQuery" }
+        auth.jdbcAuthentication()
+            .dataSource(dataSource)
+            .usersByUsernameQuery(usersByUsernameQuery)
+            .authoritiesByUsernameQuery(authoritiesByUsernameQuery)
     }
 
     override fun configure(http: HttpSecurity) {
@@ -48,3 +48,13 @@ class InMemoryJDBCAuthenticationConfig(
 }
 
 private val log = KotlinLogging.logger {}
+
+private const val usersByUsernameQuery = """
+SELECT username, password, enabled
+FROM users
+WHERE username = ?"""
+
+private const val authoritiesByUsernameQuery = """
+SELECT username, authority
+FROM authorities
+WHERE username = ?"""

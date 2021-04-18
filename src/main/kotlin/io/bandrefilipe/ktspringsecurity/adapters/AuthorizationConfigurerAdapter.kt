@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 fun configureAuthorization(http: HttpSecurity) {
     log.debug { "Configuring authorization" }
     http.authorizeRequests()
-        .antMatchers("/", "static/**").permitAll()
+        .antMatchers("/", "/h2-console/**", "static/**").permitAll()
         .antMatchers("/user").hasAnyRole(ROLE_ADMIN, ROLE_USER)
         .antMatchers("/admin").hasRole(ROLE_ADMIN)
         .and().formLogin()
