@@ -24,6 +24,8 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-security")
 
+    implementation("io.github.microutils:kotlin-logging:2.0.6")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
