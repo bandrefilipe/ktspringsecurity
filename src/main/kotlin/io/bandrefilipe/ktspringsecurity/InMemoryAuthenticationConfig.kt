@@ -9,8 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
-@Profile("in-memory-authentication")
 @EnableWebSecurity
+@Profile(IN_MEMORY_AUTHENTICATION)
 class InMemoryAuthenticationConfig : WebSecurityConfigurerAdapter() {
 
     init {
