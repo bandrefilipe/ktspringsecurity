@@ -1,7 +1,7 @@
 package io.bandrefilipe.ktspringsecurity.configuration
 
 import io.bandrefilipe.ktspringsecurity.adapters.configureAuthorization
-import io.bandrefilipe.ktspringsecurity.constants.IN_MEMORY_JDBC_AUTHENTICATION
+import io.bandrefilipe.ktspringsecurity.constants.JDBC_BASED_AUTHENTICATION
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -15,13 +15,13 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import javax.sql.DataSource
 
 @EnableWebSecurity
-@Profile(IN_MEMORY_JDBC_AUTHENTICATION)
-class InMemoryJDBCAuthenticationConfig(
+@Profile(JDBC_BASED_AUTHENTICATION)
+class JdbcBasedAuthentication(
     @Autowired private val dataSource: DataSource
 ) : WebSecurityConfigurerAdapter() {
 
     init {
-        log.debug { "Creating bean ${InMemoryJDBCAuthenticationConfig::class.simpleName}" }
+        log.debug { "Creating bean ${JdbcBasedAuthentication::class.simpleName}" }
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
