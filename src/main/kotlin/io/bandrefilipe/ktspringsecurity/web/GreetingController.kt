@@ -12,6 +12,9 @@ class GreetingController {
     @GetMapping(path = ["/user"])
     fun greetUser(): String = "greet-user"
 
+    @GetMapping(path = ["/user-only"])
+    fun greetUserOnly(): String = "greet-user-only"
+
     @GetMapping(path = ["/admin"])
     fun greetAdmin(): String = "greet-admin"
 }
